@@ -15,9 +15,12 @@ teardown() {
   run run_hook "simple-single" "default-start" "$(payload simple-single)"
   docker exec simple-single bash -c "cat /var/log/gonano/cache/current"
   docker exec simple-single bash -c "ls -lha /data/var/db/redis"
+  docker exec simple-single bash -c "ls -lha /data/var/db"
+  docker exec simple-single bash -c "ls -lha /data/var/"
+  docker exec simple-single bash -c "ls -lha /data"
   docker exec simple-single bash -c "ls -lha /data/etc/redis.conf"
   docker exec simple-single bash -c "cat /data/etc/redis.conf"
   run docker exec simple-single bash -c "ps aux | grep [r]edis-server"
   echo "$output"
-  [ "$status" -eq 1 ]
+  [ "$status" -eq 0 ]
 }
