@@ -15,6 +15,6 @@ teardown() {
   run run_hook "simple-single" "default-start" "$(payload simple-single)"
 
   run docker exec simple-single bash -c "ps aux | grep [r]edis-server"
-
-  [ "$status" -eq 0 ] 
+  echo "$output"
+  [ "$status" -eq 0 ]
 }
