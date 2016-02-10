@@ -13,7 +13,7 @@ teardown() {
   run run_hook "simple-single" "default-configure" "$(payload simple-single)"
 
   run run_hook "simple-single" "default-start" "$(payload simple-single)"
-
+  docker exec simple-single bash -c "cat /var/log/gonano/cache/current"
   run docker exec simple-single bash -c "ps aux | grep [r]edis-server"
   echo "$output"
   [ "$status" -eq 0 ]
