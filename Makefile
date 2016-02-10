@@ -26,6 +26,6 @@ install: all
 .PHONY: test
 
 test:
-	test/run_all.sh 2.6
+	# test/run_all.sh 2.6
 	test/run_all.sh 2.8
 	test/run_all.sh 3.0
