@@ -10,8 +10,10 @@ if payload[:platform] == 'local'
   maxmemory = 128
   appname   = 'nanobox'
 else
-  maxmemory = payload[:member][:schema][:meta][:ram].to_i / 1024 / 1024
-  appname   = payload[:app]
+  total_mem = `vmstat -s | grep 'total memory' | awk '{print $1}'`.to_i
+  cgroup_mem = `cat /sys/fs/cgroup/memory/memory.limit_in_bytes`.to_i
+  maxmemory = [ total_mem / 1024, cgroup_mem / 1024 / 1024 ].min
+  appname   = 'nanobox'
 end
 
 # chown data/var/db/redis for gonano
@@ -28,8 +30,12 @@ directory '/etc/service/cache/log' do
   recursive true
 end
 
+directory '/data/etc/redis' do
+  recursive true
+end
+
 # Configure redis
-template '/data/etc/redis.conf' do
+template '/data/etc/redis/redis.conf' do
   mode 0755
   source 'redis.conf.erb'
   variables ({ boxfile: boxfile, maxmemory: maxmemory })
@@ -43,7 +49,7 @@ end
 
 template '/etc/service/cache/run' do
   mode 0755
-  variables ({ exec: "redis-server /data/etc/redis.conf 2>&1" })
+  variables ({ exec: "redis-server /data/etc/redis/redis.conf 2>&1" })
 end
 
 # Configure narc
@@ -81,6 +87,23 @@ if payload[:platform] != 'local'
 
   file '/root/.ssh/authorized_keys' do
     content payload[:ssh][:admin_key][:public_key]
+  end
+
+  # Create some ssh host keys
+  execute "ssh-keygen -f /opt/gonano/etc/ssh/ssh_host_rsa_key -N '' -t rsa" do
+    not_if { ::File.exists? '/opt/gonano/etc/ssh/ssh_host_rsa_key' }
+  end
+
+  execute "ssh-keygen -f /opt/gonano/etc/ssh/ssh_host_dsa_key -N '' -t dsa" do
+    not_if { ::File.exists? '/opt/gonano/etc/ssh/ssh_host_dsa_key' }
+  end
+
+  execute "ssh-keygen -f /opt/gonano/etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa" do
+    not_if { ::File.exists? '/opt/gonano/etc/ssh/ssh_host_ecdsa_key' }
+  end
+
+  execute "ssh-keygen -f /opt/gonano/etc/ssh/ssh_host_ed25519_key -N '' -t ed25519" do
+    not_if { ::File.exists? '/opt/gonano/etc/ssh/ssh_host_ed25519_key' }
   end
 
 end

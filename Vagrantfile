@@ -59,7 +59,7 @@ Vagrant.configure(2) do |config|
   # pull the build image to run tests in
   config.vm.provision "shell", inline: <<-SCRIPT
     echo "Pulling the build image"
-    docker pull nanobox/redis:2.6
+    # docker pull nanobox/redis:2.6
     docker pull nanobox/redis:2.8
     docker pull nanobox/redis:3.0
   SCRIPT

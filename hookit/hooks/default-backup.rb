@@ -1,27 +1,31 @@
 
 # issue save to the local redis
 # 'save' rather than 'bgsave' so it blocks
-if payload[:service][:topology] == 'redundant'
-  execute 'execute save' do
-    command '/data/bin/redis-cli -p 6380 save'
-  end
+if File.exist?('/etc/service/proxy/run')
+  execute "/data/bin/redis-cli -p 6380 save"
 else
-  execute 'execute save' do
-    command '/data/bin/redis-cli save'
-  end
+  execute "/data/bin/redis-cli save"
 end
 
 # TODO: assuming we can scp backups to a backup container
 execute "send data to backup container" do
   command <<-EOF
-    gzip -c /data/var/db/redis/dump.rdb \
+    bash -c 'gzip -c /data/var/db/redis/dump.rdb \
       | tee >(md5sum | cut -f1 -d" " > /tmp/md5sum) \
-      | ssh #{payload[:backup][:local_ip]} \
-      > /data/var/db/redis/#{payload[:backup][:backup_id]}.gz
+      | ssh \
+      -o StrictHostKeyChecking=no \
+      #{payload[:backup][:local_ip]} \
+      "cat > /data/var/db/redis/#{payload[:backup][:backup_id]}.gz"
+    for i in ${PIPESTATUS[@]}; do
+      if [[ $i -ne 0 ]]; then
+        exit $i
+      fi
+    done
+    '
   EOF
 end
 
-remote_sum = `ssh #{payload[:backup][:local_ip]} "md5sum /data/var/db/redis/#{payload[:backup][:backup_id]}.gz | awk \'{print $1}\'"`.to_s.strip
+remote_sum = `ssh -o StrictHostKeyChecking=no #{payload[:backup][:local_ip]} "md5sum /data/var/db/redis/#{payload[:backup][:backup_id]}.gz"`.to_s.strip.split(' ').first
 
 # Read POST results
 local_sum = File.open('/tmp/md5sum') {|f| f.readline}.strip

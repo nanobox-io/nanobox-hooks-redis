@@ -1,0 +1,36 @@
+{
+  "boxfile": {
+    "name":"cache1",
+    "stability":"stable"
+  },
+  "service": {
+    "id": "9097d0a7-7e02-4be5-bce1-3d7cb1189488"
+  },
+  "generation": {
+    "members": [
+      {
+        "role": "primary",
+        "uid": "1",
+        "local_ip": "192.168.0.6"
+      },
+      {
+        "role": "secondary",
+        "uid": "2",
+        "local_ip": "192.168.0.7"
+      },
+      {
+        "role": "monitor",
+        "uid": "3",
+        "local_ip": "192.168.0.8"
+      }
+    ]
+  },
+  "member": {
+    "local_ip": "192.168.0.7",
+    "uid": "2",
+    "role": "secondary"
+  },
+  "logtap_host":"127.0.0.1",
+  "platform":"production",
+  "uid":"database1"
+}

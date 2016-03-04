@@ -1,0 +1,30 @@
+{
+  "generation": {
+    "members": [
+      {
+        "role": "primary",
+        "uid": "1",
+        "local_ip": "192.168.0.2",
+        "type": "default"
+      },
+      {
+        "role": "secondary",
+        "uid": "2",
+        "local_ip": "192.168.0.3",
+        "type": "default"
+      },
+      {
+        "role": "monitor",
+        "uid": "3",
+        "local_ip": "192.168.0.4",
+        "type": "monitor"
+      }
+    ]
+  },
+  "service": {
+    "id": "9097d0a7-7e02-4be5-bce1-3d7cb1189488"
+  },
+  "logtap_host":"127.0.0.1",
+  "platform":"production",
+  "uid":"redis1"
+}

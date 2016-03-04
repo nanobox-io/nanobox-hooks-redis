@@ -1,7 +1,7 @@
 
 execute "retrieve data from backup container" do
   command <<-EOF
-    ssh #{payload[:backup][:local_ip]} \
+    ssh -o StrictHostKeyChecking=no #{payload[:backup][:local_ip]} \
     'cat /data/var/db/redis/#{payload[:backup][:backup_id]}.gz' \
       | gunzip \
       > /dump.rdb.tmp
@@ -19,7 +19,7 @@ end
 
 # TODO: requires `pip install rdbtools`
 execute 'replay dump to redis' do
-  command '/usr/local/bin/rdb --command protocol /dump.rdb.tmp | nc localhost 6379'
+  command '/data/bin/rdb --command protocol /dump.rdb.tmp | /data/bin/redis-cli --pipe'
 end
 
 execute 'cleanup dump' do

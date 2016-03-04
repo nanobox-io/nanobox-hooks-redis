@@ -1,6 +1,14 @@
 
 directory '/data/etc/flip'
 
+directory '/etc/service/flip' do
+  recursive true
+end
+
+directory '/etc/service/flip/log' do
+  recursive true
+end
+
 # set flip.conf
 template '/data/etc/flip/flip.conf' do
   mode 0644

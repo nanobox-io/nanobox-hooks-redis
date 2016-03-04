@@ -1,6 +1,14 @@
 
 directory '/data/etc/flip'
 
+directory '/etc/service/flip' do
+  recursive true
+end
+
+directory '/etc/service/flip/log' do
+  recursive true
+end
+
 # set flip.conf
 template '/data/etc/flip/flip.conf' do
   mode 0644
@@ -17,6 +25,7 @@ end
 
 template '/etc/service/flip/run' do
   mode 0755
+  source 'run-root.erb'
   variables ({ exec: "/data/flip/flipd /data/etc/flip/flip.conf 2>&1" })
 end
 

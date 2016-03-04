@@ -8,7 +8,26 @@ ip        = `ifconfig eth0 | awk '/inet addr/ {print $2}' | cut -f2 -d':'`.to_s.
 master_ip = payload[:generation][:members].select { |mem| mem[:role] == 'primary'}[0][:local_ip]
 master    = (master_ip == ip) ? false : master_ip
 sentinel  = (payload[:generation][:members].select { |mem| mem[:role] == 'monitor'}[0][:local_ip] == ip) ? master_ip : '127.0.0.1'
-maxmemory = payload[:member][:schema][:meta][:ram].to_i / 1024 / 1024
+total_mem = `vmstat -s | grep 'total memory' | awk '{print $1}'`.to_i
+cgroup_mem = `cat /sys/fs/cgroup/memory/memory.limit_in_bytes`.to_i
+maxmemory = [ total_mem / 1024, cgroup_mem / 1024 / 1024 ].min
+
+# Import service (and start)
+directory '/etc/service/sentinel' do
+  recursive true
+end
+
+directory '/etc/service/sentinel/log' do
+  recursive true
+end
+
+directory '/etc/service/proxy' do
+  recursive true
+end
+
+directory '/etc/service/proxy/log' do
+  recursive true
+end
 
 # configure redis for redundancy
 template '/data/etc/redis/redis.conf' do
@@ -58,5 +77,5 @@ end
 
 template '/etc/service/proxy/run' do
   mode 0755
-  variables ({ exec: "redis_proxy.lua /data/etc/redis/redis-proxy.conf 2>&1" })
+  variables ({ exec: "/data/redundis/redis_proxy.lua /data/etc/redis/redis-proxy.conf 2>&1" })
 end

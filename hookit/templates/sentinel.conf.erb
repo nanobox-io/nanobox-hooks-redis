@@ -1,6 +1,5 @@
 port 26379
-daemonize yes
-logfile "/var/log/redis/sentinel.log"
+daemonize no
 
 sentinel monitor gonano <%= master %> 6380 2
 sentinel down-after-milliseconds gonano 3100

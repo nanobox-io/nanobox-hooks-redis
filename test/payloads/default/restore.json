@@ -1,0 +1,13 @@
+{
+  "boxfile": {
+    "name":"cache1",
+    "stability":"stable"
+  },
+  "backup": {
+    "local_ip": "192.168.0.3",
+    "backup_id": "11258593abc"
+  },
+  "logtap_host":"127.0.0.1",
+  "platform":"local",
+  "uid":"redis1"
+}

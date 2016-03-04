@@ -5,10 +5,10 @@ end
 
 payload[:generation][:members].each do |member|
 
-  if member[:member_type] == 'default'
+  if member[:type] == 'default'
 
     execute "send bulk data to new member" do
-      command "tar -cf - /data/var/db/redis | ssh #{member[:local_ip]} tar -xpf -"
+      command "tar -cf - /data/var/db/redis | ssh -o StrictHostKeyChecking=no #{member[:local_ip]} tar -xpf -"
     end
 
   end

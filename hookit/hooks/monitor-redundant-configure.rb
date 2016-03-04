@@ -5,16 +5,24 @@ sentinel  = (payload[:generation][:members].select { |mem| mem[:role] == 'monito
 
 # set redis config
 directory '/data/etc/redis' do
-  owner 'gopagoda'
-  group 'gopagoda'
+  owner 'gonano'
+  group 'gonano'
+end
+
+directory '/etc/service/sentinel' do
+  recursive true
+end
+
+directory '/etc/service/sentinel/log' do
+  recursive true
 end
 
 template '/data/etc/redis/sentinel.conf' do
   source 'sentinel.conf.erb'
   mode 0644
   variables ({ master: master_ip })
-  owner 'gopagoda'
-  group 'gopagoda'
+  owner 'gonano'
+  group 'gonano'
 end
 
 # start sentinel
@@ -30,10 +38,24 @@ template '/etc/service/sentinel/run' do
 end
 
 # Narc Setup
-template '/opt/local/etc/narc/narc.conf' do
+template '/opt/gonano/etc/narc.conf' do
   source 'monitor-narc.conf.erb'
   variables ({
     service: payload[:service],
-    app: payload[:app]
+    app: payload[:app],
+    logtap: payload[:logtap_host],
+    uid: payload[:uid]
   })
+end
+
+directory '/etc/service/narc'
+
+file '/etc/service/narc/run' do
+  mode 0755
+  content <<-EOF
+#!/bin/sh -e
+export PATH="/opt/local/sbin:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/gonano/sbin:/opt/gonano/bin"
+
+exec /opt/gonano/bin/narcd /opt/gonano/etc/narc.conf
+  EOF
 end
