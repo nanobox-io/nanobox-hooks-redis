@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+# hookit is installed as a bundled app, so we need bundler to load it for us
+$:.unshift  '/opt/gonano/hookit/vendor/bundle'
+require 'bundler/setup'
+
+# load hookit/setup to bootstrap hookit and import the dsl
+require 'hookit/setup'
+
+if payload[:member][:type] == 'default'
+  service 'ssh' do
+    action :disable
+    init :runit
+  end
+
+  directory '/etc/service/ssh' do
+    action :delete
+  end
+end

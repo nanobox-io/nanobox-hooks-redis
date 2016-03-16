@@ -6,6 +6,9 @@
   "service": {
     "id": "9097d0a7-7e02-4be5-bce1-3d7cb1189488"
   },
+  "ips": {
+    "default": "192.168.0.5"
+  },
   "generation": {
     "members": [
       {
@@ -19,7 +22,7 @@
         "local_ip": "192.168.0.3"
       },
       {
-        "role": "monitor",
+        "role": "arbitrator",
         "uid": "3",
         "local_ip": "192.168.0.4"
       }
@@ -28,7 +31,8 @@
   "member": {
     "local_ip": "192.168.0.2",
     "uid": "1",
-    "role": "primary"
+    "role": "primary",
+    "type": "default"
   },
   "logtap_host":"127.0.0.1",
   "platform":"production",

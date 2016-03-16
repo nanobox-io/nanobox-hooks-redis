@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+# hookit is installed as a bundled app, so we need bundler to load it for us
+$:.unshift  '/opt/gonano/hookit/vendor/bundle'
+require 'bundler/setup'
+
+# load hookit/setup to bootstrap hookit and import the dsl
+require 'hookit/setup'
+
+if payload[:member][:type] == 'default'
+  payload[:generation][:members].each do |member|
+    if member[:type] == 'default'
+      execute "send diff data to new member" do
+        command "rsync --delete -a /data/var/db/redis/. #{member[:local_ip]}:/data/var/db/redis/"
+      end
+    end
+  end
+end

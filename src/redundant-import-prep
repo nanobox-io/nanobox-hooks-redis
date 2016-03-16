@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+# hookit is installed as a bundled app, so we need bundler to load it for us
+$:.unshift  '/opt/gonano/hookit/vendor/bundle'
+require 'bundler/setup'
+
+# load hookit/setup to bootstrap hookit and import the dsl
+require 'hookit/setup'
+
+if payload[:member][:type] == 'default'
+  # Import service (and start)
+  directory '/etc/service/ssh' do
+    recursive true
+  end
+
+  directory '/etc/service/ssh/log' do
+    recursive true
+  end
+
+  template '/etc/service/ssh/log/run' do
+    mode 0755
+    source 'log-run.erb'
+    variables ({ svc: "ssh" })
+  end
+
+  template '/etc/service/ssh/run' do
+    mode 0755
+    source 'run-root.erb'
+    variables ({ exec: "/opt/gonano/sbin/sshd -D -e 2>&1" })
+  end
+
+  sleep 5
+
+  service 'ssh' do
+    action :enable
+    init :runit
+  end
+
+  ensure_socket 'ssh' do
+    port '22'
+    action :listening
+  end
+end
