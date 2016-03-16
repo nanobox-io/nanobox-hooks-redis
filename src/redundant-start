@@ -1,0 +1,135 @@
+#!/usr/bin/env ruby
+
+# hookit is installed as a bundled app, so we need bundler to load it for us
+$:.unshift  '/opt/gonano/hookit/vendor/bundle'
+require 'bundler/setup'
+
+# load hookit/setup to bootstrap hookit and import the dsl
+require 'hookit/setup'
+
+if payload[:member][:type] == 'default'
+  # Import service (and start)
+  directory '/etc/service/cache' do
+    recursive true
+  end
+
+  directory '/etc/service/cache/log' do
+    recursive true
+  end
+
+  directory '/etc/service/sentinel' do
+    recursive true
+  end
+
+  directory '/etc/service/sentinel/log' do
+    recursive true
+  end
+
+  directory '/etc/service/proxy' do
+    recursive true
+  end
+
+  directory '/etc/service/proxy/log' do
+    recursive true
+  end
+
+  directory '/etc/service/flip' do
+    recursive true
+  end
+
+  directory '/etc/service/flip/log' do
+    recursive true
+  end
+
+  template '/etc/service/cache/log/run' do
+    mode 0755
+    source 'log-run.erb'
+    variables ({ svc: "cache" })
+  end
+
+  template '/etc/service/cache/run' do
+    mode 0755
+    variables ({ exec: "redis-server /data/etc/redis/redis.conf 2>&1" })
+  end
+
+  template '/etc/service/sentinel/log/run' do
+    mode 0755
+    source 'log-run.erb'
+    variables ({ svc: "sentinel", dependency: "cache" })
+  end
+
+  template '/etc/service/sentinel/run' do
+    mode 0755
+    variables ({ exec: "redis-server /data/etc/redis/sentinel.conf --sentinel 2>&1" })
+  end
+
+  template '/etc/service/proxy/log/run' do
+    mode 0755
+    source 'log-run.erb'
+    variables ({ svc: "proxy", dependency: "sentinel" })
+  end
+
+  template '/etc/service/proxy/run' do
+    mode 0755
+    variables ({ exec: "/data/redundis/redis_proxy.lua /data/etc/redis/redis-proxy.conf 2>&1" })
+  end
+
+  template '/etc/service/flip/log/run' do
+    mode 0755
+    source 'log-run.erb'
+    variables ({ svc: "flip" })
+  end
+
+  template '/etc/service/flip/run' do
+    mode 0755
+    source 'run-root.erb'
+    variables ({ exec: "/data/flip/flipd /data/etc/flip/flip.conf 2>&1" })
+  end
+
+  execute 'multicast route' do
+    command 'route add -net 224.0.0.0/3 dev eth0 || true'
+  end
+
+  file '/etc/nanoinit.d/mroute' do
+    content 'route add -net 224.0.0.0/3 dev eth0'
+    mode 0755
+  end
+
+  sleep 5
+
+  service "cache" do
+    action :enable
+  end
+
+  service "sentinel" do
+    action :enable
+  end
+
+  service "proxy" do
+    action :enable
+  end
+
+  service "flip" do
+    action :enable
+  end
+
+  ensure_socket 'cache' do
+    port '1427'
+    action :listening
+  end
+
+  ensure_socket 'sentinel' do
+    port '26379'
+    action :listening
+  end
+
+  ensure_socket 'proxy' do
+    port '6379'
+    action :listening
+  end
+
+  ensure_socket 'flip' do
+    port '6379'
+    action :listening
+  end
+end

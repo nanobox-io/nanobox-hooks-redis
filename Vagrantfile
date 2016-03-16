@@ -13,28 +13,10 @@ Vagrant.configure(2) do |config|
   # install docker
   config.vm.provision "shell", inline: <<-SCRIPT
     if [[ ! `which docker > /dev/null 2>&1` ]]; then
-      # add docker's gpg key
-      apt-key adv \
-        --keyserver hkp://p80.pool.sks-keyservers.net:80 \
-        --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-
-      # add the source to our apt sources
-      echo \
-        "deb https://apt.dockerproject.org/repo ubuntu-trusty main \n" \
-          > /etc/apt/sources.list.d/docker.list
-
-      # update the package index
-      apt-get -y update
-
-      # ensure the old repo is purged
-      apt-get -y purge lxc-docker
-
-      # install docker
-      apt-get -y install docker-engine
-
+      sudo apt-get -y purge docker-engine
+      bash <(curl -fsSL https://get.docker.com/)
       # clean up packages that aren't needed
       apt-get -y autoremove
-
       # add the vagrant user to the docker group
       usermod -aG docker vagrant
     fi
@@ -59,7 +41,6 @@ Vagrant.configure(2) do |config|
   # pull the build image to run tests in
   config.vm.provision "shell", inline: <<-SCRIPT
     echo "Pulling the build image"
-    # docker pull nanobox/redis:2.6
     docker pull nanobox/redis:2.8
     docker pull nanobox/redis:3.0
   SCRIPT

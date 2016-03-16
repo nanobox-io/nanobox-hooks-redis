@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+# hookit is installed as a bundled app, so we need bundler to load it for us
+$:.unshift  '/opt/gonano/hookit/vendor/bundle'
+require 'bundler/setup'
+
+# load hookit/setup to bootstrap hookit and import the dsl
+require 'hookit/setup'
+
+if payload[:member][:type] == 'default'
+  if `sv status cache` =~ /^run/
+    execute "/data/bin/redis-cli shutdown save"
+  end
+
+  service "cache" do
+    action :disable
+    init :runit
+    only_if {`sv status cache` =~ /^run/}
+  end
+
+  directory '/etc/service/cache' do
+    action :delete
+  end
+end

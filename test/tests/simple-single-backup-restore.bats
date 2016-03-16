@@ -10,10 +10,10 @@ echo_lines() {
 
 @test "Start Container" {
   start_container "backup-restore" "192.168.0.2"
-  run run_hook "backup-restore" "default-configure" "$(payload default/configure-production)"
+  run run_hook "backup-restore" "configure" "$(payload default/configure-production)"
   echo_lines
   [ "$status" -eq 0 ] 
-  run run_hook "backup-restore" "default-start" "$(payload default/start)"
+  run run_hook "backup-restore" "start" "$(payload default/start)"
   [ "$status" -eq 0 ]
   # Verify
   run docker exec backup-restore bash -c "ps aux | grep [r]edis-server"
@@ -27,11 +27,11 @@ echo_lines() {
 @test "Start Backup Container" {
   start_container "backup" "192.168.0.3"
   # generate some keys
-  run run_hook "backup" "default-configure" "$(payload default/configure-production)"
+  run run_hook "backup" "configure" "$(payload default/configure-production)"
   [ "$status" -eq 0 ]
 
   # start ssh server
-  run run_hook "backup" "default-start_sshd" "$(payload default/start_sshd)"
+  run run_hook "backup" "import-prep" "$(payload default/import-prep)"
   [ "$status" -eq 0 ]
   until docker exec "backup" bash -c "ps aux | grep [s]shd"
   do
@@ -50,7 +50,7 @@ echo_lines() {
 }
 
 @test "Backup" {
-  run run_hook "backup-restore" "default-backup" "$(payload default/backup)"
+  run run_hook "backup-restore" "backup" "$(payload default/backup)"
   echo_lines
   [ "$status" -eq 0 ]
 }
@@ -66,7 +66,7 @@ echo_lines() {
 }
 
 @test "Restore" {
-  run run_hook "backup-restore" "default-restore" "$(payload default/restore)"
+  run run_hook "backup-restore" "restore" "$(payload default/restore)"
   echo_lines
   [ "$status" -eq 0 ]
 }

@@ -3,9 +3,6 @@
     "name":"cache1",
     "stability":"stable"
   },
-  "service": {
-    "id": "9097d0a7-7e02-4be5-bce1-3d7cb1189488"
-  },
   "ips": {
     "default": "192.168.0.5"
   },
@@ -14,27 +11,33 @@
       {
         "role": "primary",
         "uid": "1",
-        "local_ip": "192.168.0.6"
+        "local_ip": "192.168.0.2",
+        "type": "default"
       },
       {
         "role": "secondary",
         "uid": "2",
-        "local_ip": "192.168.0.7"
+        "local_ip": "192.168.0.3",
+        "type": "default"
       },
       {
         "role": "arbitrator",
         "uid": "3",
-        "local_ip": "192.168.0.8"
+        "local_ip": "192.168.0.4",
+        "type": "arbitrator"
       }
     ]
   },
+  "service": {
+    "id": "9097d0a7-7e02-4be5-bce1-3d7cb1189488"
+  },
   "member": {
-    "local_ip": "192.168.0.7",
-    "uid": "2",
-    "role": "secondary",
-    "type": "default"
+    "role": "arbitrator",
+    "uid": "3",
+    "local_ip": "192.168.0.4",
+    "type": "arbitrator"
   },
   "logtap_host":"127.0.0.1",
   "platform":"production",
-  "uid":"database1"
+  "uid":"redis1"
 }

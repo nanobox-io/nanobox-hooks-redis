@@ -13,7 +13,7 @@ echo_lines() {
 }
 
 @test "Vip Up" {
-  run run_hook "simple-single" "default-single-vip_up" "$(payload default/single/vip_up)"
+  run run_hook "simple-single" "ip-add" "$(payload default/ip-add)"
   echo_lines
   [ "$status" -eq 0 ]
 }
@@ -24,7 +24,7 @@ echo_lines() {
 }
 
 @test "Vip Down" {
-  run run_hook "simple-single" "default-single-vip_down" "$(payload default/single/vip_down)"
+  run run_hook "simple-single" "ip-remove" "$(payload default/ip-remove)"
   echo_lines
   [ "$status" -eq 0 ]
 }

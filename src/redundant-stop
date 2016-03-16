@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+
+# hookit is installed as a bundled app, so we need bundler to load it for us
+$:.unshift  '/opt/gonano/hookit/vendor/bundle'
+require 'bundler/setup'
+
+# load hookit/setup to bootstrap hookit and import the dsl
+require 'hookit/setup'
+
+if payload[:member][:type] == 'default'
+  if `sv status cache` =~ /^run/
+    execute "/data/bin/redis-cli -p 6380 shutdown save"
+  end
+
+  service "flip" do
+    action :disable
+    init :runit
+    only_if {`sv status flip` =~ /^run/}
+  end
+
+  service "proxy" do
+    action :disable
+    init :runit
+    only_if {`sv status proxy` =~ /^run/}
+  end
+
+  service "sentinel" do
+    action :disable
+    init :runit
+    only_if {`sv status sentinel` =~ /^run/}
+  end
+
+  service "cache" do
+    action :disable
+    init :runit
+    only_if {`sv status cache` =~ /^run/}
+  end
+
+  file '/etc/nanoinit.d/mroute' do
+    action :delete
+    only_if {::File.exist?('/etc/nanoinit.d/mroute')}
+  end
+
+  directory '/etc/service/flip' do
+    action :delete
+  end
+
+  directory '/etc/service/proxy' do
+    action :delete
+  end
+
+  directory '/etc/service/sentinel' do
+    action :delete
+  end
+
+  directory '/etc/service/cache' do
+    action :delete
+  end
+end
