@@ -7,7 +7,7 @@ require 'bundler/setup'
 # load hookit/setup to bootstrap hookit and import the dsl
 require 'hookit/setup'
 
-if payload[:member][:type] == 'default'
+if ['default', 'primary', 'secondary'].include? payload[:member][:role]
     # Import service (and start)
   directory '/etc/service/cache' do
     recursive true

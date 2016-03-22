@@ -7,9 +7,9 @@ require 'bundler/setup'
 # load hookit/setup to bootstrap hookit and import the dsl
 require 'hookit/setup'
 
-if payload[:member][:type] == 'default'
-  payload[:generation][:members].each do |member|
-    if member[:type] == 'default'
+if payload[:member][:role] == 'primary'
+  payload[:members].each do |member|
+    if ['primary', 'secondary'].include? member[:role]
       # find available space
       new_member_stat = `ssh -o StrictHostKeyChecking=no #{member[:local_ip]} stat -f --format=\\\"%a %S\\\" /data/var/db/redis`
       available_space = new_member_stat.split(' ')[0].to_i * new_member_stat.split(' ')[1].to_i

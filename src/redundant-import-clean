@@ -7,13 +7,11 @@ require 'bundler/setup'
 # load hookit/setup to bootstrap hookit and import the dsl
 require 'hookit/setup'
 
-if payload[:member][:type] == 'default'
-  service 'ssh' do
-    action :disable
-    init :runit
-  end
+service 'ssh' do
+  action :disable
+  init :runit
+end
 
-  directory '/etc/service/ssh' do
-    action :delete
-  end
+directory '/etc/service/ssh' do
+  action :delete
 end

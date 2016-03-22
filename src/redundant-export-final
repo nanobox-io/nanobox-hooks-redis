@@ -7,9 +7,9 @@ require 'bundler/setup'
 # load hookit/setup to bootstrap hookit and import the dsl
 require 'hookit/setup'
 
-if payload[:member][:type] == 'default'
-  payload[:generation][:members].each do |member|
-    if member[:type] == 'default'
+if payload[:member][:role] == 'primary'
+  payload[:members].each do |member|
+    if ['primary', 'secondary'].include? member[:role]
       execute "send diff data to new member" do
         command "rsync --delete -a /data/var/db/redis/. #{member[:local_ip]}:/data/var/db/redis/"
       end

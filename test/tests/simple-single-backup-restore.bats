@@ -1,5 +1,6 @@
 # source docker helpers
 . util/docker.sh
+. util/service.sh
 
 echo_lines() {
   for (( i=0; i < ${#lines[*]}; i++ ))
@@ -10,28 +11,27 @@ echo_lines() {
 
 @test "Start Container" {
   start_container "backup-restore" "192.168.0.2"
-  run run_hook "backup-restore" "configure" "$(payload default/configure-production)"
+  run run_hook "backup-restore" "configure" "$(payload configure)"
   echo_lines
   [ "$status" -eq 0 ] 
-  run run_hook "backup-restore" "start" "$(payload default/start)"
+  run run_hook "backup-restore" "start" "$(payload start)"
   [ "$status" -eq 0 ]
   # Verify
-  run docker exec backup-restore bash -c "ps aux | grep [r]edis-server"
+  wait_for_running "backup-restore"
+  wait_for_listening "backup-restore" "192.168.0.2" ${default_port}
   # [ "$status" -eq 0 ]
-  until docker exec "backup-restore" bash -c "nc 192.168.0.2 6379 < /dev/null"
-  do
-    sleep 1
-  done
 }
 
 @test "Start Backup Container" {
   start_container "backup" "192.168.0.3"
   # generate some keys
-  run run_hook "backup" "configure" "$(payload default/configure-production)"
+  run run_hook "backup" "configure" "$(payload configure)"
+  echo_lines
   [ "$status" -eq 0 ]
 
   # start ssh server
-  run run_hook "backup" "import-prep" "$(payload default/import-prep)"
+  run run_hook "backup" "import-prep" "$(payload import-prep)"
+  echo_lines
   [ "$status" -eq 0 ]
   until docker exec "backup" bash -c "ps aux | grep [s]shd"
   do
@@ -39,43 +39,30 @@ echo_lines() {
   done
 }
 
-@test "Insert Redis Data" {
-  run docker exec "backup-restore" bash -c "/data/bin/redis-cli set mykey data"
-  echo_lines
-  [ "$status" -eq 0 ]
-  run docker exec "backup-restore" bash -c "/data/bin/redis-cli get mykey"
-  echo_lines
-  [ "${lines[0]}" = "data" ]
-  [ "$status" -eq 0 ]
+@test "Insert ${service_name} Data" {
+  insert_test_data "backup-restore" "192.168.0.2" ${default_port} "mykey" "data"
+  verify_test_data "backup-restore" "192.168.0.2" ${default_port} "mykey" "data"
 }
 
 @test "Backup" {
-  run run_hook "backup-restore" "backup" "$(payload default/backup)"
+  run run_hook "backup-restore" "backup" "$(payload backup)"
   echo_lines
   [ "$status" -eq 0 ]
 }
 
-@test "Update Redis Data" {
-  run docker exec "backup-restore" bash -c "/data/bin/redis-cli set mykey date"
-  echo_lines
-  [ "$status" -eq 0 ]
-  run docker exec "backup-restore" bash -c "/data/bin/redis-cli get mykey"
-  echo_lines
-  [ "${lines[0]}" = "date" ]
-  [ "$status" -eq 0 ]
+@test "Update ${service_name} Data" {
+  update_test_data "backup-restore" "192.168.0.2" ${default_port} "mykey" "date"
+  verify_test_data "backup-restore" "192.168.0.2" ${default_port} "mykey" "date"
 }
 
 @test "Restore" {
-  run run_hook "backup-restore" "restore" "$(payload default/restore)"
+  run run_hook "backup-restore" "restore" "$(payload restore)"
   echo_lines
   [ "$status" -eq 0 ]
 }
 
-@test "Verify Redis Data" {
-  run docker exec "backup-restore" bash -c "/data/bin/redis-cli get mykey"
-  echo_lines
-  [ "${lines[0]}" = "data" ]
-  [ "$status" -eq 0 ]
+@test "Verify ${service_name} Data" {
+  verify_test_data "backup-restore" "192.168.0.2" ${default_port} "mykey" "data"
 }
 
 @test "Stop Container" {

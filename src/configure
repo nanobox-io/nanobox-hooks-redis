@@ -48,7 +48,7 @@ if payload[:platform] != 'local'
   end
 end
 
-if payload[:member][:type] == 'default'
+if ['default', 'primary', 'secondary'].include? payload[:member][:role]
   directory '/data/var/db/redis' do
     recursive true
   end

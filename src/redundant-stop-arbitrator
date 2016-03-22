@@ -7,26 +7,24 @@ require 'bundler/setup'
 # load hookit/setup to bootstrap hookit and import the dsl
 require 'hookit/setup'
 
-if payload[:member][:type] == 'arbitrator'
-  service "flip" do
-    action :disable
-    init :runit
-  end
+service "flip" do
+  action :disable
+  init :runit
+end
 
-  service "sentinel" do
-    action :disable
-    init :runit
-  end
+service "sentinel" do
+  action :disable
+  init :runit
+end
 
-  file '/etc/nanoinit.d/mroute' do
-    action :delete
-  end
+file '/etc/nanoinit.d/mroute' do
+  action :delete
+end
 
-  directory '/etc/service/flip' do
-    action :delete
-  end
+directory '/etc/service/flip' do
+  action :delete
+end
 
-  directory '/etc/service/sentinel' do
-    action :delete
-  end
+directory '/etc/service/sentinel' do
+  action :delete
 end

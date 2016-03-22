@@ -1,0 +1,34 @@
+{
+  "boxfile": {
+    "name": "cache1",
+    "stability": "stable"
+  },
+  "member": {
+    "local_ip": "192.168.0.3",
+    "uid": "2",
+    "role": "secondary"
+  },
+  "members": [
+    {
+      "local_ip": "192.168.0.6",
+      "uid": "1",
+      "role": "primary",
+      "type": "default"
+    },
+    {
+      "local_ip": "192.168.0.7",
+      "uid": "2",
+      "role": "secondary",
+      "type": "default"
+    },
+    {
+      "local_ip": "192.168.0.8",
+      "uid": "3",
+      "role": "arbitrator",
+      "type": "arbitrator"
+    }
+  ],
+  "logtap_host": "127.0.0.1",
+  "uid": "redis1",
+  "platform": "production"
+}
