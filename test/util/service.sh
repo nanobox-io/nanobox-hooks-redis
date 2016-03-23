@@ -51,6 +51,7 @@ insert_test_data() {
   key=$4
   data=$5
   run docker exec ${container} bash -c "if [ -f /etc/service/proxy/run ]; then sv restart proxy; fi;"
+  sleep 5
   run docker exec ${container} bash -c "/data/bin/redis-cli set ${key} ${data}"
 }
 
@@ -61,6 +62,7 @@ update_test_data() {
   key=$4
   data=$5
   run docker exec ${container} bash -c "if [ -f /etc/service/proxy/run ]; then sv restart proxy; fi;"
+  sleep 5
   run docker exec ${container} bash -c "/data/bin/redis-cli set ${key} ${data}"
 }
 
@@ -71,6 +73,7 @@ verify_test_data() {
   key=$4
   data=$5
   run docker exec ${container} bash -c "if [ -f /etc/service/proxy/run ]; then sv restart proxy; fi;"
+  sleep 5
   run docker exec ${container} bash -c "/data/bin/redis-cli get ${key}"
   echo_lines
   [ "${lines[0]}" = "${data}" ]
