@@ -22,6 +22,7 @@ wait_for_listening() {
   container=$1
   ip=$2
   port=$3
+  run docker exec ${container} bash -c "if [ -f /etc/service/proxy/run ]; then sv restart proxy; fi;"
   until docker exec ${container} bash -c "nc ${ip} ${port} < /dev/null"
   do
     sleep 1
@@ -49,6 +50,7 @@ insert_test_data() {
   port=$3
   key=$4
   data=$5
+  run docker exec ${container} bash -c "if [ -f /etc/service/proxy/run ]; then sv restart proxy; fi;"
   run docker exec ${container} bash -c "/data/bin/redis-cli set ${key} ${data}"
 }
 
@@ -58,6 +60,7 @@ update_test_data() {
   port=$3
   key=$4
   data=$5
+  run docker exec ${container} bash -c "if [ -f /etc/service/proxy/run ]; then sv restart proxy; fi;"
   run docker exec ${container} bash -c "/data/bin/redis-cli set ${key} ${data}"
 }
 
@@ -67,6 +70,7 @@ verify_test_data() {
   port=$3
   key=$4
   data=$5
+  run docker exec ${container} bash -c "if [ -f /etc/service/proxy/run ]; then sv restart proxy; fi;"
   run docker exec ${container} bash -c "/data/bin/redis-cli get ${key}"
   echo_lines
   [ "${lines[0]}" = "${data}" ]

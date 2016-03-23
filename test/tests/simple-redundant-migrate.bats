@@ -143,6 +143,11 @@ echo_lines() {
   verify_stopped "simple-redundant-new-secondary"
 }
 
+@test "Insert Old ${service_name} Data" {
+  insert_test_data "simple-redundant-old-primary" "192.168.0.2" ${default_port} "mykey" "data"
+  verify_test_data "simple-redundant-old-primary" "192.168.0.2" ${default_port} "mykey" "data"
+}
+
 @test "Run Import Prep" {
   if [ ! -f ../src/import-prep ]; then
     skip "import-prep hook isn't defined"
@@ -275,15 +280,11 @@ echo_lines() {
 }
 
 @test "Verify New Primary ${service_name} Data" {
-  skip
-  verify_test_data "simple-redundant-new-primary" "192.168.0.6" ${default_port} "mykey" "data"
-  verify_test_data "simple-redundant-new-primary" "192.168.0.6" ${default_port} "mykey2" "date"
+  verify_test_data "simple-redundant-new-primary" "192.168.0.6" ${default_port} "mykey" "date"
 }
 
 @test "Verify New Secondary ${service_name} Data" {
-  skip
-  verify_test_data "simple-redundant-new-secondary" "192.168.0.6" ${default_port} "mykey" "data"
-  verify_test_data "simple-redundant-new-secondary" "192.168.0.6" ${default_port} "mykey2" "date"
+  verify_test_data "simple-redundant-new-secondary" "192.168.0.6" ${default_port} "mykey" "date"
 }
 
 # Stop containers

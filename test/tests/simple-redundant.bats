@@ -111,7 +111,7 @@ echo_lines() {
   [ "$status" -eq 0 ]
 }
 
-@test "Start Arbitrator Sentinel" {
+@test "Start Arbitrator" {
   run run_hook "simple-redundant-arbitrator" "redundant-start-arbitrator" "$(payload redundant-start-arbitrator)"
   echo_lines
   [ "$status" -eq 0 ]
@@ -127,7 +127,7 @@ echo_lines() {
   wait_for_listening "simple-redundant-secondary" "192.168.0.3" ${default_port}
 }
 
-@test "Ensure Arbitrator Sentinel Is Started" {
+@test "Ensure Arbitrator Is Started" {
   wait_for_arbitrator_running "simple-redundant-arbitrator"
 }
 
@@ -137,13 +137,18 @@ echo_lines() {
 }
 
 @test "Insert Secondary ${service_name} Data" {
+  if [ "$multi_master" = "false" ]; then
+    skip
+  fi
   insert_test_data "simple-redundant-secondary" "192.168.0.3" ${default_port} "mykey2" "date"
   verify_test_data "simple-redundant-secondary" "192.168.0.3" ${default_port} "mykey2" "date"
 }
 
 @test "Verify Primary ${service_name} Data" {
   verify_test_data "simple-redundant-primary" "192.168.0.2" ${default_port} "mykey" "data"
-  verify_test_data "simple-redundant-primary" "192.168.0.2" ${default_port} "mykey2" "date"
+  if [ ! "$multi_master" = "false" ]; then
+    verify_test_data "simple-redundant-primary" "192.168.0.2" ${default_port} "mykey2" "date"
+  fi
 }
 
 # Verify IP
