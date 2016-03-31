@@ -7,35 +7,33 @@ require 'bundler/setup'
 # load hookit/setup to bootstrap hookit and import the dsl
 require 'hookit/setup'
 
-if ['default', 'primary', 'secondary'].include? payload[:member][:role]
-    # Import service (and start)
-  directory '/etc/service/cache' do
-    recursive true
-  end
+# Import service (and start)
+directory '/etc/service/cache' do
+  recursive true
+end
 
-  directory '/etc/service/cache/log' do
-    recursive true
-  end
+directory '/etc/service/cache/log' do
+  recursive true
+end
 
-  template '/etc/service/cache/log/run' do
-    mode 0755
-    source 'log-run.erb'
-    variables ({ svc: "cache" })
-  end
+template '/etc/service/cache/log/run' do
+  mode 0755
+  source 'log-run.erb'
+  variables ({ svc: "cache" })
+end
 
-  template '/etc/service/cache/run' do
-    mode 0755
-    variables ({ exec: "redis-server /data/etc/redis/redis.conf 2>&1" })
-  end
+template '/etc/service/cache/run' do
+  mode 0755
+  variables ({ exec: "redis-server /data/etc/redis/redis.conf 2>&1" })
+end
 
-  sleep 5
+sleep 5
 
-  service "cache" do
-    action :enable
-  end
+service "cache" do
+  action :enable
+end
 
-  ensure_socket 'cache' do
-    port '6379'
-    action :listening
-  end
+ensure_socket 'cache' do
+  port '6379'
+  action :listening
 end

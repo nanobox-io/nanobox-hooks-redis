@@ -23,7 +23,7 @@ echo_lines() {
 }
 
 @test "Start Backup Container" {
-  start_container "backup" "192.168.0.3"
+  start_container "backup" "192.168.0.9"
   # generate some keys
   run run_hook "backup" "configure" "$(payload configure)"
   echo_lines

@@ -8,7 +8,7 @@ require 'bundler/setup'
 require 'hookit/setup'
 
 # find available space
-new_member_stat = `ssh -o StrictHostKeyChecking=no #{payload[:new_member][:local_ip]} stat -f --format=\\\"%a %S\\\" /data/var/db/redis`
+new_member_stat = `ssh -o StrictHostKeyChecking=no #{payload[:member][:local_ip]} stat -f --format=\\\"%a %S\\\" /data/var/db/redis`
 available_space = new_member_stat.split(' ')[0].to_i * new_member_stat.split(' ')[1].to_i
 
 # find needed space
@@ -27,5 +27,5 @@ execute 'execute save' do
 end
 
 execute "send bulk data to new member" do
-  command "tar -cf - /data/var/db/redis | ssh -o StrictHostKeyChecking=no #{payload[:new_member][:local_ip]} tar -xpf -"
+  command "tar -cf - /data/var/db/redis | ssh -o StrictHostKeyChecking=no #{payload[:member][:local_ip]} tar -xpf -"
 end

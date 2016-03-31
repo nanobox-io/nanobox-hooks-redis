@@ -1,7 +1,7 @@
 module Hooky
   module Redis
 
-    BOXFILE_DEFAULTS = {
+    CONFIG_DEFAULTS = {
       # Redis settings
       tcp_keepalive:                 {type: :integer, default: 60},
       databases:                     {type: :integer, default: 16},
