@@ -2,6 +2,10 @@ module Hooky
   module Redis
 
     CONFIG_DEFAULTS = {
+      # global settings
+      before_deploy:                 {type: :array, of: :string, default: []},
+      after_deploy:                  {type: :array, of: :string, default: []},
+      hook_ref:                      {type: :string, default: "stable"},
       # Redis settings
       tcp_keepalive:                 {type: :integer, default: 60},
       databases:                     {type: :integer, default: 16},

@@ -81,7 +81,7 @@ if ['default', 'primary', 'secondary'].include? payload[:member][:role]
 
   # Configure narc
   template '/opt/gonano/etc/narc.conf' do
-    variables ({ uid: payload[:uid], app: appname, logtap: payload[:logtap_host] })
+    variables ({ uid: payload[:component][:uid], logvac: payload[:logvac_host] })
   end
 
   directory '/etc/service/narc'

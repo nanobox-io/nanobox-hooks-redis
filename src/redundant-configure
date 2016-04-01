@@ -87,10 +87,8 @@ elsif payload[:member][:role] == 'arbitrator'
   template '/opt/gonano/etc/narc.conf' do
     source 'narc.conf.erb'
     variables ({
-      service: payload[:service],
-      app: payload[:app],
-      logtap: payload[:logtap_host],
-      uid: payload[:uid]
+      logvac: payload[:logvac_host],
+      uid: payload[:component][:uid]
     })
   end
 
