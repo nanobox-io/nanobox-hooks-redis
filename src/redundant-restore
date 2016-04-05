@@ -9,8 +9,8 @@ require 'hookit/setup'
 
 execute "retrieve data from backup container" do
   command <<-EOF
-    ssh -o StrictHostKeyChecking=no #{payload[:backup][:local_ip]} \
-    'cat /data/var/db/redis/#{payload[:backup][:backup_id]}.gz' \
+    ssh -o StrictHostKeyChecking=no #{payload[:warehouse][:host]} \
+    'cat /data/var/db/redis/#{payload[:warehouse][:backup_id]}.gz' \
       | gunzip \
       > /dump.rdb.tmp
   EOF

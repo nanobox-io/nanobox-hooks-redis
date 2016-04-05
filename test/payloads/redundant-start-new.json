@@ -1,12 +1,5 @@
 {
-  "boxfile": {
-    "name": "cache1",
-    "stability": "stable"
-  },
-  "member": {
-    "local_ip": "192.168.0.2",
-    "uid": "1",
-    "role": "primary"
+  "config": {
   },
   "members": [
     {
@@ -27,8 +20,5 @@
       "role": "arbitrator",
       "type": "arbitrator"
     }
-  ],
-  "logtap_host": "127.0.0.1",
-  "uid": "redis1",
-  "platform": "production"
+  ]
 }

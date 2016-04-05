@@ -2,7 +2,7 @@
     "id" : "<%= payload[:member][:role] == 'arbitrator' ? 'monitor' : payload[:member][:role] %>"
     ,"quorum" : 2
     ,"gossip_interval" : 1000
-    ,"key" : "<%= payload[:service][:id] %>"
+    ,"key" : "<%= payload[:component][:id] %>"
     ,"ping_per_interval" : 3
     ,"ping_timeout" : 1500
     ,"servers" :

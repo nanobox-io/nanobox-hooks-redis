@@ -7,18 +7,16 @@ require 'bundler/setup'
 # load hookit/setup to bootstrap hookit and import the dsl
 require 'hookit/setup'
 
-if ['default', 'primary', 'secondary'].include? payload[:member][:role]
-  if `sv status cache` =~ /^run/
-    execute "/data/bin/redis-cli shutdown save"
-  end
+if `sv status cache` =~ /^run/
+  execute "/data/bin/redis-cli shutdown save"
+end
 
-  service "cache" do
-    action :disable
-    init :runit
-    only_if {`sv status cache` =~ /^run/}
-  end
+service "cache" do
+  action :disable
+  init :runit
+  only_if {`sv status cache` =~ /^run/}
+end
 
-  directory '/etc/service/cache' do
-    action :delete
-  end
+directory '/etc/service/cache' do
+  action :delete
 end

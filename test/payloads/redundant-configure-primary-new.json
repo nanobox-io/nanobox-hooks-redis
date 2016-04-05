@@ -1,7 +1,7 @@
 {
-  "boxfile": {
-    "name": "cache1",
-    "stability": "stable"
+  "logvac_host": "127.0.0.1",
+  "platform": "production",
+  "config": {
   },
   "member": {
     "local_ip": "192.168.0.6",
@@ -28,13 +28,12 @@
       "type": "arbitrator"
     }
   ],
-  "service": {
+  "component": {
+    "name": "willy-walrus",
+    "uid": "redis1",
     "id": "9097d0a7-7e02-4be5-bce1-3d7cb1189488"
   },
   "ips": {
     "default": "192.168.0.5"
-  },
-  "logtap_host": "127.0.0.1",
-  "uid": "redis1",
-  "platform": "production"
+  }
 }

@@ -1,5 +1,4 @@
 {
-  "logtap_host": "127.0.0.1",
-  "uid": "redis1",
-  "platform": "production"
+  "config": {
+  }
 }

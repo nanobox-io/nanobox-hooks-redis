@@ -1,12 +1,17 @@
 {
-  "boxfile": {
-    "name": "cache1",
-    "stability": "stable"
+  "logvac_host": "127.0.0.1",
+  "platform": "production",
+  "config": {
   },
   "member": {
     "local_ip": "192.168.0.8",
     "uid": "3",
     "role": "arbitrator"
+  },
+  "component": {
+    "name": "willy-walrus",
+    "uid": "redis1",
+    "id": "9097d0a7-7e02-4be5-bce1-3d7cb1189488"
   },
   "ssh": {
     "admin_key": {
@@ -14,7 +19,7 @@
       "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAYQDHxkTqBFO7sKLtU9r7DTEg5OoQdHixk/p4CAiYqP1GYdrtaAi6MCwDI4Aj1t/+3baD3YqGGa/7uR4uzjyC82qWRdtfJqwnCTMB9ZDv9vDXu61Z+7VoKjtzILZuQGxbXwk= root"
     }
   },
-  "logtap_host": "127.0.0.1",
-  "uid": "redis1",
-  "platform": "production"
+  "users": [
+
+  ]
 }

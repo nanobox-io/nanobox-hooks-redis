@@ -16,8 +16,8 @@ execute "send data to backup container" do
       | tee >(md5sum | cut -f1 -d" " > /tmp/md5sum) \
       | ssh \
       -o StrictHostKeyChecking=no \
-      #{payload[:backup][:local_ip]} \
-      "cat > /data/var/db/redis/#{payload[:backup][:backup_id]}.gz"
+      #{payload[:warehouse][:host]} \
+      "cat > /data/var/db/redis/#{payload[:warehouse][:backup_id]}.gz"
     for i in ${PIPESTATUS[@]}; do
       if [[ $i -ne 0 ]]; then
         exit $i
@@ -27,7 +27,7 @@ execute "send data to backup container" do
   EOF
 end
 
-remote_sum = `ssh -o StrictHostKeyChecking=no #{payload[:backup][:local_ip]} "md5sum /data/var/db/redis/#{payload[:backup][:backup_id]}.gz"`.to_s.strip.split(' ').first
+remote_sum = `ssh -o StrictHostKeyChecking=no #{payload[:warehouse][:host]} "md5sum /data/var/db/redis/#{payload[:warehouse][:backup_id]}.gz"`.to_s.strip.split(' ').first
 
 # Read POST results
 local_sum = File.open('/tmp/md5sum') {|f| f.readline}.strip

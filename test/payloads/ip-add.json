@@ -1,17 +1,5 @@
 {
-  "boxfile": {
-    "name": "cache1",
-    "stability": "stable"
-  },
-  "member": {
-    "local_ip": "192.168.0.2",
-    "uid": "1",
-    "role": "default"
-  },
   "ips": {
     "default": "192.168.0.3"
-  },
-  "logtap_host": "127.0.0.1",
-  "uid": "redis1",
-  "platform": "production"
+  }
 }

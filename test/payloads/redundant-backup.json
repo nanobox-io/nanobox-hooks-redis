@@ -1,18 +1,35 @@
 {
-  "boxfile": {
-    "name": "cache1",
-    "stability": "stable"
+  "strategy": "warehouse",
+  "ips": {
+    "default": "192.168.0.3"
   },
-  "member": {
-    "local_ip": "192.168.0.2",
-    "uid": "1",
-    "role": "primary"
-  },
-  "backup": {
-    "local_ip": "192.168.0.3",
+  "warehouse": {
+    "host": "192.168.0.9",
+    "port": 8080,
+    "token": "asdlkfjsalsdjfklsjdf",
     "backup_id": "11258593abc"
   },
-  "logtap_host": "127.0.0.1",
-  "uid": "redis1",
-  "platform": "production"
+  "members": [
+    {
+      "local_ip": "192.168.0.2",
+      "uid": "1",
+      "role": "primary",
+      "type": "default"
+    },
+    {
+      "local_ip": "192.168.0.3",
+      "uid": "2",
+      "role": "secondary",
+      "type": "default"
+    },
+    {
+      "local_ip": "192.168.0.4",
+      "uid": "3",
+      "role": "arbitrator",
+      "type": "arbitrator"
+    }
+  ],
+  "users": [
+
+  ]
 }
