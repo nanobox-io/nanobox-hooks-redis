@@ -37,6 +37,9 @@ echo_lines() {
   run run_hook "simple-single-production" "stop" "$(payload stop)"
   echo_lines
   [ "$status" -eq 0 ]
+  run run_hook "simple-single-production" "stop" "$(payload stop)"
+  echo_lines
+  [ "$status" -eq 0 ]
   wait_for_stop "simple-single-production"
   # Verify
   verify_stopped "simple-single-production"

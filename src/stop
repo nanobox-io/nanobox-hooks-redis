@@ -15,8 +15,10 @@ service "cache" do
   action :disable
   init :runit
   only_if {`sv status cache` =~ /^run/}
+  not_if { !Dir.exist?('/etc/service/cache') }
 end
 
 directory '/etc/service/cache' do
   action :delete
+  not_if { !Dir.exist?('/etc/service/cache') }
 end

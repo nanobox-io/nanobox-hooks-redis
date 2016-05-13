@@ -10,8 +10,10 @@ require 'hookit/setup'
 service 'ssh' do
   action :disable
   init :runit
+  not_if { !Dir.exist?('/etc/service/ssh') }
 end
 
 directory '/etc/service/ssh' do
   action :delete
+  not_if { !Dir.exist?('/etc/service/ssh') }
 end

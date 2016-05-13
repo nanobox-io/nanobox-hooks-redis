@@ -10,21 +10,26 @@ require 'hookit/setup'
 service "flip" do
   action :disable
   init :runit
+  not_if { !Dir.exist?('/etc/service/flip') }
 end
 
 service "sentinel" do
   action :disable
   init :runit
+  not_if { !Dir.exist?('/etc/service/sentinel') }
 end
 
 file '/etc/nanoinit.d/mroute' do
   action :delete
+  not_if { !File.exist?('/etc/nanoinit.d/mroute') }
 end
 
 directory '/etc/service/flip' do
   action :delete
+  not_if { !Dir.exist?('/etc/service/flip') }
 end
 
 directory '/etc/service/sentinel' do
   action :delete
+  not_if { !Dir.exist?('/etc/service/sentinel') }
 end

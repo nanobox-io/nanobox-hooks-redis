@@ -15,24 +15,28 @@ service "flip" do
   action :disable
   init :runit
   only_if {`sv status flip` =~ /^run/}
+  not_if { !Dir.exist?('/etc/service/flip') }
 end
 
 service "proxy" do
   action :disable
   init :runit
   only_if {`sv status proxy` =~ /^run/}
+  not_if { !Dir.exist?('/etc/service/proxy') }
 end
 
 service "sentinel" do
   action :disable
   init :runit
   only_if {`sv status sentinel` =~ /^run/}
+  not_if { !Dir.exist?('/etc/service/sentinel') }
 end
 
 service "cache" do
   action :disable
   init :runit
   only_if {`sv status cache` =~ /^run/}
+  not_if { !Dir.exist?('/etc/service/cache') }
 end
 
 file '/etc/nanoinit.d/mroute' do
@@ -42,16 +46,20 @@ end
 
 directory '/etc/service/flip' do
   action :delete
+  not_if { !Dir.exist?('/etc/service/flip') }
 end
 
 directory '/etc/service/proxy' do
   action :delete
+  not_if { !Dir.exist?('/etc/service/proxy') }
 end
 
 directory '/etc/service/sentinel' do
   action :delete
+  not_if { !Dir.exist?('/etc/service/sentinel') }
 end
 
 directory '/etc/service/cache' do
   action :delete
+  not_if { !Dir.exist?('/etc/service/cache') }
 end
