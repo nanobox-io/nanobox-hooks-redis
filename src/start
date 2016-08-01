@@ -37,3 +37,21 @@ ensure_socket 'cache' do
   port '6379'
   action :listening
 end
+
+# Attach the IP if provided
+if payload[:ips]
+  # set up persistance
+  file "/etc/nanoinit.d/eth00" do
+    content <<-EOF
+      ifconfig eth0:0 #{payload[:ips][:default]}
+    EOF
+    mode 0755
+  end
+
+  # bring up interface
+  execute "bring up vip" do
+    command <<-EOF
+      ifconfig eth0:0 #{payload[:ips][:default]}
+    EOF
+  end
+end
