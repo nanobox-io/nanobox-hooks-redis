@@ -28,6 +28,11 @@ echo_lines() {
   wait_for_listening "simple-single-production" "192.168.0.2" ${default_port}
 }
 
+@test "Verify IP" {
+  run docker exec simple-single bash -c "ifconfig | grep 192.168.0.3"
+  [ "$status" -eq 0 ] 
+}
+
 @test "Insert Production ${service_name} Data" {
   insert_test_data "simple-single-production" "192.168.0.2" ${default_port} "mykey" "data"
   verify_test_data "simple-single-production" "192.168.0.2" ${default_port} "mykey" "data"
@@ -43,6 +48,11 @@ echo_lines() {
   wait_for_stop "simple-single-production"
   # Verify
   verify_stopped "simple-single-production"
+}
+
+@test "Verify No IP" {
+  run docker exec simple-single bash -c "ifconfig | grep 192.168.0.3"
+  [ "$status" -eq 1 ] 
 }
 
 @test "Stop Production Container" {
