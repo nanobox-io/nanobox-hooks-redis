@@ -29,7 +29,7 @@ echo_lines() {
 }
 
 @test "Verify IP" {
-  run docker exec simple-single bash -c "ifconfig | grep 192.168.0.3"
+  run docker exec simple-single-local bash -c "ifconfig | grep 192.168.0.3"
   [ "$status" -eq 0 ] 
 }
 
@@ -48,7 +48,7 @@ echo_lines() {
 }
 
 @test "Verify No IP" {
-  run docker exec simple-single bash -c "ifconfig | grep 192.168.0.3"
+  run docker exec simple-single-local bash -c "ifconfig | grep 192.168.0.3"
   [ "$status" -eq 1 ] 
 }
 
