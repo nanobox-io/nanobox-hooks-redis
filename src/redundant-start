@@ -90,7 +90,10 @@ execute 'multicast route' do
 end
 
 file '/etc/nanoinit.d/mroute' do
-  content 'route add -net 224.0.0.0/3 dev eth0'
+  content <<-EOF
+#!/bin/bash
+route add -net 224.0.0.0/3 dev eth0
+EOF
   mode 0755
 end
 
