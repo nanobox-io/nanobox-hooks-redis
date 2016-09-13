@@ -82,7 +82,7 @@ verify_test_data() {
 
 verify_plan() {
   [ "${lines[0]}" = "{" ]
-  [ "${lines[1]}" = "  \"redundant\": true," ]
+  [ "${lines[1]}" = "  \"redundant\": false," ]
   [ "${lines[2]}" = "  \"horizontal\": false," ]
   [ "${lines[3]}" = "  \"users\": [" ]
   [ "${lines[4]}" = "  ]," ]

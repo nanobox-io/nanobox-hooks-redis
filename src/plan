@@ -10,7 +10,7 @@ require 'hookit/setup'
 require 'json'
 
 plan = {
-  redundant: true,
+  redundant: false,
   horizontal: false,
   users: [],
   ips: [:default],
