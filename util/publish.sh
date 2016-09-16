@@ -21,5 +21,11 @@ aws s3 sync \
   --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers \
   --region us-east-1
 
+echo "Creating invalidation for cloudfront"
+aws  configure  set preview.cloudfront true
+aws cloudfront create-invalidation \
+  --distribution-id E1O0D0A2DTYRY8 \
+  --paths /hooks/redis-${stability}.tgz /hooks/redis-${stability}.md5
+
 echo "Cleaning..."
 rm -rf $project_dir/.build
