@@ -18,7 +18,7 @@ local_md5 = execute "local md5" do
 end
 
 aws_md5 = execute "aws md5" do
-  command "curl -f -k https://s3.amazonaws.com/tools.nanobox.io/hooks/redis-#{converged_config[:hook_ref]}.md5"
+  command "curl -f -k https://d1ormdui8qdvue.cloudfront.net/hooks/redis-#{converged_config[:hook_ref]}.md5"
 end
 
 if local_md5 != aws_md5
@@ -27,13 +27,13 @@ if local_md5 != aws_md5
 bash -c 'curl \
     -f \
     -k \
-    https://s3.amazonaws.com/tools.nanobox.io/hooks/redis-#{converged_config[:hook_ref]}.tgz \
+    https://d1ormdui8qdvue.cloudfront.net/hooks/redis-#{converged_config[:hook_ref]}.tgz \
       | tar -xz -C /opt/nanobox/hooks && \
   curl \
     -f \
     -k \
     -o /var/nanobox/hooks.md5 \
-    https://s3.amazonaws.com/tools.nanobox.io/hooks/redis-#{converged_config[:hook_ref]}.md5'
+    https://d1ormdui8qdvue.cloudfront.net/hooks/redis-#{converged_config[:hook_ref]}.md5'
 END
   end
 end
