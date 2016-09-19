@@ -11,7 +11,7 @@ require 'hookit/setup'
 if payload[:ips]
 
   execute "bring down vip" do
-    command "ifconfig eth0:0 down"
+    command "/etc/nanoinit.d/eth00 stop"
     not_if { !File.exist?('/etc/nanoinit.d/eth00') }
   end
 

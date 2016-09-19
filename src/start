@@ -44,7 +44,23 @@ if payload[:ips]
   file "/etc/nanoinit.d/eth00" do
     content <<-EOF
 #!/bin/bash
-ifconfig eth0:0 #{payload[:ips][:default]}
+case $1 in
+  start)
+    if [[ ! $(ifconfig) =~ eth0:0 ]]; then
+      ifconfig eth0:0 #{payload[:ips][:default]}
+      arping -A -c 10 -I eth0 #{payload[:ips][:default]}
+    fi
+    ;;
+  stop)
+    if [[ $(ifconfig) =~ eth0:0 ]]; then
+      ifconfig eth0:0 down
+    fi
+    ;;
+  *)
+    echo "$0 start|stop"
+    exit 1
+    ;;
+esac
 EOF
     mode 0755
   end
@@ -52,7 +68,7 @@ EOF
   # bring up interface
   execute "bring up vip" do
     command <<-EOF
-      ifconfig eth0:0 #{payload[:ips][:default]}
+      /etc/nanoinit.d/eth00 start
     EOF
   end
 end
