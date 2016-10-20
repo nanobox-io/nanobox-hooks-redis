@@ -15,6 +15,6 @@ before_install:
   - docker network create --driver=bridge --subnet=192.168.0.0/16 --opt="com.docker.network.driver.mtu=1450" --opt="com.docker.network.bridge.name=redd0" nanobox
   - ifconfig
   - echo building $VERSION
-  - docker pull nanobox/redis:$VERSION || (docker pull nanobox/redis:${VERSION}-beta; docker tag nanobox/redis:3.2-beta nanobox/redis:3.2)
+  - docker pull nanobox/redis:$VERSION || (docker pull nanobox/redis:${VERSION}-beta; docker tag nanobox/redis:${VERSION}-beta nanobox/redis:${VERSION})
 
 script: sudo stdbuf -oL test/run_all.sh $VERSION
