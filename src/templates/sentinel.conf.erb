@@ -1,5 +1,6 @@
 port 26379
 daemonize no
+bind 0.0.0.0
 
 sentinel monitor gonano <%= master %> 6380 2
 sentinel down-after-milliseconds gonano 3100

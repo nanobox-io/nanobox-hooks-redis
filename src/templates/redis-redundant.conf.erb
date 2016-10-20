@@ -63,3 +63,5 @@ aof-rewrite-incremental-fsync <%= config[:aof_rewrite_incremental_fsync] %>
 <% if slaveof -%>
 slaveof <%= slaveof %> 6380
 <% end -%>
+
+bind 0.0.0.0
