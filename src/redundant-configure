@@ -83,20 +83,22 @@ elsif payload[:member][:role] == 'arbitrator'
     })
   end
 
-  # Narc Setup
-  template '/opt/gonano/etc/narc.conf' do
-    source 'narc.conf.erb'
-    variables ({
-      logvac: payload[:logvac_host],
-      uid: payload[:component][:uid]
-    })
-  end
+  if payload[:logvac_host]
+    # Narc Setup
+    template '/opt/gonano/etc/narc.conf' do
+      source 'narc.conf.erb'
+      variables ({
+        logvac: payload[:logvac_host],
+        uid: payload[:component][:uid]
+      })
+    end
 
-  directory '/etc/service/narc'
+    directory '/etc/service/narc'
 
-  template '/etc/service/narc/run' do
-    mode 0755
-    source 'run-root.erb'
-    variables ({ exec: "/opt/gonano/bin/narcd /opt/gonano/etc/narc.conf" })
+    template '/etc/service/narc/run' do
+      mode 0755
+      source 'run-root.erb'
+      variables ({ exec: "/opt/gonano/bin/narcd /opt/gonano/etc/narc.conf" })
+    end
   end
 end
