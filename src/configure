@@ -79,16 +79,18 @@ if ['default', 'primary', 'secondary'].include? payload[:member][:role]
     variables ({ config: config, maxmemory: maxmemory })
   end
 
-  # Configure narc
-  template '/opt/gonano/etc/narc.conf' do
-    variables ({ uid: payload[:component][:uid], logvac: payload[:logvac_host] })
-  end
+  if payload[:logvac_host]
+    # Configure narc
+    template '/opt/gonano/etc/narc.conf' do
+      variables ({ uid: payload[:component][:uid], logvac: payload[:logvac_host] })
+    end
 
-  directory '/etc/service/narc'
+    directory '/etc/service/narc'
 
-  template '/etc/service/narc/run' do
-    mode 0755
-    source 'run-root.erb'
-    variables ({ exec: "/opt/gonano/bin/narcd /opt/gonano/etc/narc.conf" })
+    template '/etc/service/narc/run' do
+      mode 0755
+      source 'run-root.erb'
+      variables ({ exec: "/opt/gonano/bin/narcd /opt/gonano/etc/narc.conf" })
+    end
   end
 end
