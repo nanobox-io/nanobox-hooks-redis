@@ -30,7 +30,7 @@ if payload[:member][:role] == 'primary'
       end
 
       execute "send bulk data to new member" do
-        command "tar -cf - /data/var/db/redis | ssh -o StrictHostKeyChecking=no #{member[:local_ip]} tar -xpf -"
+        command "tar -cf - /data/var/db/redis | ssh -o StrictHostKeyChecking=no #{member[:local_ip]} tar -C / -xpf -"
       end
     end
   end

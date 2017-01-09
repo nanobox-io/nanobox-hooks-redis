@@ -27,5 +27,5 @@ execute 'execute save' do
 end
 
 execute "send bulk data to new member" do
-  command "tar -cf - /data/var/db/redis | ssh -o StrictHostKeyChecking=no #{payload[:member][:local_ip]} tar -xpf -"
+  command "tar -cf - /data/var/db/redis | ssh -o StrictHostKeyChecking=no #{payload[:member][:local_ip]} tar -C / -xpf -"
 end
