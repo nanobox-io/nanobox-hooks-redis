@@ -92,6 +92,9 @@ echo_lines() {
   run run_hook "simple-single-old" "export-live" "$(payload export-live)"
   echo_lines
   [ "$status" -eq 0 ]
+
+  run docker exec "simple-single-new" bash -c "[[ ! -d /root/data ]]"
+  [ "$status" -eq 0 ]
 }
 
 @test "Update Old ${service_name} Data" {
@@ -113,6 +116,9 @@ echo_lines() {
   fi 
   run run_hook "simple-single-old" "export-final" "$(payload export-final)"
   echo_lines
+  [ "$status" -eq 0 ]
+
+  run docker exec "simple-single-new" bash -c "[[ ! -d /root/data ]]"
   [ "$status" -eq 0 ]
 }
 
