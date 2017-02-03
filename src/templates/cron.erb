@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+require 'remote_syslog_logger'
+require 'logger'
+
+# hookit is installed as a bundled app, so we need bundler to load it for us
+$:.unshift  '/opt/gonano/hookit/vendor/bundle'
+require 'bundler/setup'
+
+# load hookit/setup to bootstrap hookit and import the dsl
+require 'hookit/setup'
+
+logger = RemoteSyslogLogger.new("<%= logvac_host %>", 514)
+
+begin
+  logger.add(Logger::INFO, "Starting: <%= command %>", "<%= component_uid %>.<%= member_uid %>[cron<%= cron_id %>]")
+  execute "<%= command %>" do
+    command "<%= command %>"
+    user 'gonano'
+    on_data {|data| logger.add(Logger::INFO, data, "<%= component_uid %>.<%= member_uid %>[cron<%= cron_id %>]")}
+  end
+  logger.add(Logger::INFO, "Finished: <%= command %>", "<%= component_uid %>.<%= member_uid %>[cron<%= cron_id %>]")
+rescue Hookit::Error::UnexpectedExit
+  logger.add(Logger::ERROR, "There was an unexpected exit from the cron", "<%= component_uid %>.<%= member_uid %>[cron<%= cron_id %>]")
+end

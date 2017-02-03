@@ -94,3 +94,71 @@ if ['default', 'primary', 'secondary'].include? payload[:member][:role]
     end
   end
 end
+
+# Install extra packages
+
+# Add extra paths
+if payload[:extra_path_dirs] && payload[:extra_path_dirs].length > 0
+  directory "/data/etc/env.d" do
+    recursive true
+    owner 'gonano'
+    group 'gonano'
+  end
+
+  file "/data/etc/env.d/EXTRA_PATHS" do
+    content payload[:extra_path_dirs].join(":")
+    owner 'gonano'
+    group 'gonano'
+    mode 0444
+  end
+end
+
+if payload[:extra_packages]
+  execute "Install packages" do
+    command "/data/bin/pkgin -y in #{payload[:extra_packages].join(' ')}"
+    path "/data/sbin:/data/bin:/opt/gonano/sbin:/opt/gonano/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    user 'gonano'
+  end
+end
+
+if payload[:extra_steps]
+  payload[:extra_steps].each_with_index do |cmd, i|
+
+    execute "Extra Step: #{cmd}" do
+      command "bash -i -l -c \"#{escape cmd}\""
+      cwd "/data"
+      path "/data/sbin:/data/bin:/opt/gonano/sbin:/opt/gonano/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      user 'gonano'
+    end
+  end
+end
+
+# Set up cron
+if payload[:member][:uid] == 1 && ! payload[:cron_jobs].nil?
+  include Hookit::Helper::Cron
+  include Hookit::Helper::Shell
+
+  directory '/opt/nanobox/cron/'
+
+  payload[:cron_jobs].each_with_index do |job, id|
+    template "/opt/nanobox/cron/#{job[:id]}" do
+      owner 'gonano'
+      source 'cron.erb'
+      group 'gonano'
+      mode 0755
+      variables ({
+        component_uid: payload[:component][:uid],
+        member_uid: payload[:member][:uid],
+        logvac_host: payload[:logvac_host],
+        command: escape_shell_string(job[:command]),
+        cron_id: id + 1
+      })
+    end
+  end
+
+  template '/etc/crontab' do
+    mode 0644
+    variables ({ crons: payload[:cron_jobs] })
+  end
+
+end

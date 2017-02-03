@@ -5,7 +5,7 @@
   },
   "member": {
     "local_ip": "192.168.0.2",
-    "uid": "1",
+    "uid": 1,
     "role": "primary"
   },
   "component": {
@@ -13,6 +13,28 @@
     "uid": "redis1",
     "id": "9097d0a7-7e02-4be5-bce1-3d7cb1189488"
   },
+  "cron_jobs": [
+    {
+      "id": "11234",
+      "schedule": "* * * * *",
+      "command": "bash -c 'echo hi > /tmp/test'"
+    },
+    {
+      "id": "45290",
+      "schedule": "* * * * *",
+      "command": "ls /tmp"
+    }
+  ],
+  "extra_path_dirs": [
+    "/data/var/home/gonano/bin",
+    "/var/tmp"
+  ],
+  "extra_steps": [
+    "touch /tmp/extra_step"
+  ],
+  "extra_packages": [
+    "GeoIP"
+  ],
   "users": [
 
   ]

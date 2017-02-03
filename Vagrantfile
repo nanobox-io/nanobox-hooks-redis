@@ -43,6 +43,7 @@ Vagrant.configure(2) do |config|
     echo "Pulling the build image"
     docker pull nanobox/redis:2.8
     docker pull nanobox/redis:3.0
+    docker pull nanobox/redis:3.2
   SCRIPT
 
   # create an adhoc network

@@ -1,7 +1,7 @@
 {
   "member": {
     "local_ip": "192.168.0.2",
-    "uid": "1",
+    "uid": 1,
     "role": "default"
   }
 }

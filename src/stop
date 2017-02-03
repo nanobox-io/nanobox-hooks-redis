@@ -36,3 +36,13 @@ directory '/etc/service/cache' do
   action :delete
   not_if { !Dir.exist?('/etc/service/cache') }
 end
+
+service 'cron' do
+  action :disable
+  not_if { !Dir.exist?('/etc/service/cron') }
+end
+
+directory '/etc/service/cron' do
+  action :delete
+  not_if { !Dir.exist?('/etc/service/cron') }
+end

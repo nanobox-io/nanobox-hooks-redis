@@ -1,25 +1,25 @@
 {
   "member": {
     "local_ip": "192.168.0.6",
-    "uid": "1",
+    "uid": 1,
     "role": "primary"
   },
   "members": [
     {
       "local_ip": "192.168.0.2",
-      "uid": "1",
+      "uid": 1,
       "role": "primary",
       "type": "default"
     },
     {
       "local_ip": "192.168.0.3",
-      "uid": "2",
+      "uid": 2,
       "role": "secondary",
       "type": "default"
     },
     {
       "local_ip": "192.168.0.4",
-      "uid": "3",
+      "uid": 3,
       "role": "arbitrator",
       "type": "arbitrator"
     }
