@@ -1,0 +1,8 @@
+PATH=/opt/gonano/sbin:/opt/gonano/bin:/data/sbin:/data/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+<%
+  crons.each do |job|
+-%>
+<%= sanitize_cron(job[:schedule]) %> root /opt/nanobox/cron/<%= job[:id] %>
+<% 
+  end
+-%>
