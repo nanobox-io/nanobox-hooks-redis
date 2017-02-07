@@ -9,7 +9,7 @@ require 'hookit/setup'
 
 include Hooky::Redis
 
-config = converge( Hooky::Redis::CONFIG_DEFAULTS, payload[:config] )
+config = converge( Hooky::Redis::CONFIG_DEFAULTS, payload[:config] || {} )
 
 if payload[:platform] != 'local'
   # Setup root keys for data migrations
