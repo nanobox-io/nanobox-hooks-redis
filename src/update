@@ -23,8 +23,7 @@ end
 
 if local_md5 != aws_md5
   execute "update hooks" do
-    command <<-END
-bash -c 'curl \
+    command "curl \
     -f \
     -k \
     https://d1ormdui8qdvue.cloudfront.net/hooks/redis-#{converged_config[:hook_ref]}.tgz \
@@ -33,7 +32,6 @@ bash -c 'curl \
     -f \
     -k \
     -o /var/nanobox/hooks.md5 \
-    https://d1ormdui8qdvue.cloudfront.net/hooks/redis-#{converged_config[:hook_ref]}.md5'
-END
+    https://d1ormdui8qdvue.cloudfront.net/hooks/redis-#{converged_config[:hook_ref]}.md5"
   end
 end

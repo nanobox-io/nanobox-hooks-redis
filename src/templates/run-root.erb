@@ -1,4 +1,8 @@
 #!/bin/sh -e
+
+# redirect stderr to stdout
+exec 2>&1
+
 export PATH="/data/sbin:/data/bin:/opt/gonano/sbin:/opt/gonano/bin:/opt/local/sbin:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 exec <%= exec %>
