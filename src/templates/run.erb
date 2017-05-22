@@ -14,4 +14,4 @@ end
 <% if defined? dependency -%>
 sv start <%= dependency %> || exit 1
 <% end -%>
-exec su - gonano -c '<%= exec %>'
+exec chpst -u gonano <%= exec %>
