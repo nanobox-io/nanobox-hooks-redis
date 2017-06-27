@@ -37,5 +37,12 @@
   ],
   "users": [
 
-  ]
+  ],
+  "env": {
+    "APP_NAME": "slippery-sloth",
+    "DATA_DB_HOST": "192.168.0.10",
+    "DATA_DB_USERS": "root gonano",
+    "DATA_DB_ROOT_PW": "secret",
+    "DATA_DB_GONANO_PW": "less-secret"
+  }
 }
