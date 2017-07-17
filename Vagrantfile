@@ -44,6 +44,7 @@ Vagrant.configure(2) do |config|
     docker pull nanobox/redis:2.8
     docker pull nanobox/redis:3.0
     docker pull nanobox/redis:3.2
+    docker pull nanobox/redis:4.0
   SCRIPT
 
   # create an adhoc network
