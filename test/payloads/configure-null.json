@@ -15,7 +15,7 @@
   },
   "component": {
     "name": "willy-walrus",
-    "uid": "redis1",
+    "uid": "data.redis1",
     "id": "9097d0a7-7e02-4be5-bce1-3d7cb1189488"
   }
 }
