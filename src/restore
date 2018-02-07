@@ -1,35 +1,11 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bash
 
-# hookit is installed as a bundled app, so we need bundler to load it for us
-$:.unshift  '/opt/gonano/hookit/vendor/bundle'
-require 'bundler/setup'
+cat >/tmp/dump.rdb.tmp
 
-# load hookit/setup to bootstrap hookit and import the dsl
-require 'hookit/setup'
+rm -rf /data/var/db/redis/temp*.rdb
 
-execute "retrieve data from backup container" do
-  command <<-EOF
-    ssh -o StrictHostKeyChecking=no #{payload[:warehouse][:host]} \
-    'cat /data/var/db/redis/#{payload[:warehouse][:backup_id]}.gz' \
-      | gunzip \
-      > /dump.rdb.tmp
-  EOF
-end
+/data/bin/redis-cli flushall
 
-# forced 'appendonly no'
-execute 'clean data dir from failed saves' do
-  command 'rm -rf /data/var/db/redis/temp*.rdb'
-end
+/data/bin/rdb --command protocol /tmp/dump.rdb.tmp | /data/bin/redis-cli --pipe
 
-execute 'flush redis' do
-  command '/data/bin/redis-cli flushall'
-end
-
-# TODO: requires `pip install rdbtools`
-execute 'replay dump to redis' do
-  command '/data/bin/rdb --command protocol /dump.rdb.tmp | /data/bin/redis-cli --pipe'
-end
-
-execute 'cleanup dump' do
-  command 'rm -f /dump.rdb.tmp'
-end
+rm -f /tmp/dump.rdb.tmp
