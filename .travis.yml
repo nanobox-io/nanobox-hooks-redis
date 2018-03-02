@@ -1,6 +1,7 @@
 sudo: required
 
-dist: trusty
+services:
+  - docker
 
 env:
   - VERSION=2.8
@@ -9,12 +10,20 @@ env:
   - VERSION=4.0
 
 before_install:
-  - sudo apt-get -y purge docker-engine
-  - bash <(curl -fsSL https://get.docker.com/)
   - docker version
   - docker network create --driver=bridge --subnet=192.168.0.0/16 --opt="com.docker.network.driver.mtu=1450" --opt="com.docker.network.bridge.name=redd0" nanobox
   - ifconfig
-  - echo building $VERSION
-  - docker pull nanobox/redis:$VERSION || (docker pull nanobox/redis:${VERSION}-beta; docker tag nanobox/redis:${VERSION}-beta nanobox/redis:${VERSION})
+  - sudo -H pip install awscli
 
-script: sudo stdbuf -oL test/run_all.sh $VERSION
+script:
+  - make test-${VERSION}
+
+jobs:
+  include:
+    - stage: publish
+      script:
+        - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+        - 'if [ "$BRANCH" == "master" ]; 
+            then make;
+            curl -s -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "Travis-API-Version: 3" -H "Authorization: token ${TRAVIS_TOKEN}" -d "{\"request\":{\"branch\":\"master\"}}" https://api.travis-ci.org/repo/nanobox-io%2Fnanobox-docker-redis/requests; 
+          fi'
