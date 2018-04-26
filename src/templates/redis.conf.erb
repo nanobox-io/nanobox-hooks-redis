@@ -3,7 +3,7 @@ daemonize no
 pidfile /var/run/redis.pid
 port 6379
 # bind 127.0.0.1
-timeout 0
+timeout <%= config[:timeout] %>
 tcp-keepalive <%= config[:tcp_keepalive] %>
 loglevel notice
 # syslog-enabled no

@@ -7,6 +7,7 @@ module Hooky
       after_deploy:                  {type: :array, of: :string, default: []},
       hook_ref:                      {type: :string, default: "stable"},
       # Redis settings
+      timeout:                       {type: :integer, default: 0},
       tcp_keepalive:                 {type: :integer, default: 60},
       databases:                     {type: :integer, default: 16},
       stop_writes_on_bgsave_error:   {type: :string,  default: 'yes'},
